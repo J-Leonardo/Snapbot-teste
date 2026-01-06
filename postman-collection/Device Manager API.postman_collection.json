@@ -1,0 +1,444 @@
+{
+	"info": {
+		"_postman_id": "2731e215-291e-4541-bbd1-752d4edf6621",
+		"name": "Device Manager API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50863855",
+		"_collection_link": "https://leonardo-m-paes001-1656992.postman.co/workspace/Jose-Leonardo-Machado-Paes's-Wo~5529a49e-c512-4352-890b-827f62fcab0f/collection/50863855-2731e215-291e-4541-bbd1-752d4edf6621?action=share&source=collection_link&creator=50863855"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Login bem-sucedido\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Captura a resposta JSON",
+									"var jsonData = pm.response.json();",
+									"",
+									"// Salva o token na variável de ambiente",
+									"// Ajuste conforme sua API retorna o token",
+									"pm.environment.set(\"token\", jsonData.token);",
+									"",
+									"// OU se o token vier dentro de um objeto \"data\":",
+									"// pm.environment.set(\"token\", jsonData.data.token);",
+									"",
+									"// OU se for \"accessToken\":",
+									"// pm.environment.set(\"token\", jsonData.accessToken);",
+									"",
+									"// OU se for \"access_token\":",
+									"// pm.environment.set(\"token\", jsonData.access_token);",
+									"",
+									"// Log para verificar",
+									"console.log(\"Token salvo:\", pm.environment.get(\"token\"));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"token\");\r",
+									"\r",
+									"if (!token) {\r",
+									"    // Faz login automaticamente\r",
+									"    pm.sendRequest({\r",
+									"        url: pm.environment.get(\"base_url\") + \"/login\",\r",
+									"        method: 'POST',\r",
+									"        header: {\r",
+									"            'Content-Type': 'application/json',\r",
+									"        },\r",
+									"        body: {\r",
+									"            mode: 'raw',\r",
+									"            raw: JSON.stringify({\r",
+									"                email: \"joao@example.com\",\r",
+									"                password: \"senha123\"\r",
+									"            })\r",
+									"        }\r",
+									"    }, function (err, response) {\r",
+									"        if (err) {\r",
+									"            console.log(err);\r",
+									"        } else {\r",
+									"            var jsonData = response.json();\r",
+									"            pm.environment.set(\"token\", jsonData.token);\r",
+									"            console.log(\"Login automático realizado!\");\r",
+									"        }\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"followAuthorizationHeader": false,
+						"removeRefererHeaderOnRedirect": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"teste@example.com\",\r\n    \"password\": \"12344321\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}login",
+							"host": [
+								"{{base_url}}login"
+							]
+						},
+						"description": "StartFragmentAutentica um usuário existente no sistema.  \n  \nValida as credenciais do usuário (email e senha) e retorna um token de autenticação Bearer que deve ser usado em todas as requisições protegidas subsequentes.  \n  \nO token deve ser incluído no header Authorization como: \"Bearer {token}\"  \n  \nValidações:  \n\\- Email: obrigatório, formato válido  \n\\- Senha: obrigatória  \n  \nResponse de Sucesso (200):  \n{  \n\"message\": \"Login realizado com sucesso\",  \n\"user\": {  \n\"id\": 1,  \n\"name\": \"João\",  \n\"email\": \"joao@example.com\"  \n},  \n\"token\": \"1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"  \n}  \n  \nResponse de Erro (422):  \n{  \n\"message\": \"As credenciais estão incorretas.\",  \n\"errors\": {  \n\"email\": \\[\"As credenciais estão incorretas.\"\\]  \n}  \n}EndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste\",\r\n    \"email\": \"teste@example.com\",\r\n    \"password\": \"12344321\",\r\n    \"password_confirmation\": \"12344321\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}register",
+							"host": [
+								"{{base_url}}register"
+							]
+						},
+						"description": "StartFragmentCria uma nova conta de usuário no sistema.  \n  \nEste endpoint permite que novos usuários se registrem fornecendo nome, email e senha. Após o registro bem-sucedido, o usuário recebe automaticamente um token de autenticação que pode ser usado para acessar as rotas protegidas da API.  \n  \nValidações:  \n\\- Nome: obrigatório, mínimo 3 caracteres  \n\\- Email: obrigatório, formato válido, único no sistema  \n\\- Senha: obrigatória, mínimo 8 caracteres  \n\\- Confirmação de senha: deve coincidir com a senha  \n  \nResponse de Sucesso (201):  \n{  \n\"message\": \"Usuário registrado com sucesso\",  \n\"user\": {  \n\"id\": 1,  \n\"name\": \"João\",  \n\"email\": \"joao@example.com\"  \n},  \n\"token\": \"1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"  \n}  \n  \nResponse de Erro (422):  \n{  \n\"message\": \"The email has already been taken.\",  \n\"errors\": {  \n\"email\": \\[\"The email has already been taken.\"\\]  \n}  \n}EndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}me",
+							"host": [
+								"{{base_url}}me"
+							]
+						},
+						"description": "StartFragmentRetorna os dados do usuário autenticado.  \n  \nEste endpoint permite que o usuário recupere suas próprias informações de perfil usando o token de autenticação.  \n  \nÚtil para:  \n\\- Verificar se o token ainda é válido  \n\\- Obter dados atualizados do usuário  \n\\- Exibir informações no frontend  \n  \nAutenticação: Requer token Bearer no header Authorization  \n  \nResponse de Sucesso (200):  \n{  \n\"user\": {  \n\"id\": 1,  \n\"name\": \"João\",  \n\"email\": \"joao@example.com\"  \n}  \n}  \n  \nResponse de Erro (401):  \n{  \n\"message\": \"Unauthenticated.\"  \n}EndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    pm.environment.unset(\"token\");\r",
+									"    console.log(\"Token removido\");\r",
+									"    }"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}logout",
+							"host": [
+								"{{base_url}}logout"
+							]
+						},
+						"description": "StartFragmentEncerra a sessão do usuário autenticado.\n\nInvalida o token de autenticação atual do usuário, fazendo logout do sistema. Após o logout, o token não poderá mais ser usado para acessar rotas protegidas.\n\nAutenticação: Requer token Bearer no header Authorization\n\nResponse de Sucesso (200):  \n{  \n\"message\": \"Logout realizado com sucesso\"  \n}\n\nResponse de Erro (401):  \n{  \n\"message\": \"Unauthenticated.\"EndFragment"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Devices",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}devices",
+							"host": [
+								"{{base_url}}devices"
+							]
+						},
+						"description": "StartFragmentLista todos os dispositivos do usuário autenticado com paginação.  \n  \nRetorna uma lista paginada de todos os dispositivos cadastrados pelo usuário autenticado. Suporta filtros avançados e ordenação personalizável.  \n  \nFiltros Disponíveis (Query Parameters):  \n\\- page: número da página (padrão: 1)  \n\\- location: filtrar por localização (busca parcial, case-insensitive)  \n\\- in_use: filtrar por status (true/false/1/0)  \n\\- purchase_date_start: data inicial da faixa (formato: YYYY-MM-DD)  \n\\- purchase_date_end: data final da faixa (formato: YYYY-MM-DD)  \n\\- sort_by: campo para ordenação (name, location, purchase_date, in_use, created_at)  \n\\- sort_order: direção da ordenação (asc, desc) - padrão: desc  \n  \nPaginação:  \n\\- Items por página: 10  \n\\- Usuário só vê seus próprios dispositivos  \n  \nAutenticação: Requer token Bearer no header Authorization  \n  \nResponse de Sucesso (200):  \n{  \n\"data\": \\[  \n{  \n\"id\": 1,  \n\"name\": \"iPhone 13 Pro\",  \n\"location\": \"Escritório\",  \n\"purchase_date\": \"2023-05-15\",  \n\"in_use\": true,  \n\"user_id\": 1,  \n\"created_at\": \"2025-01-06T10:30:00.000000Z\",  \n\"updated_at\": \"2025-01-06T10:30:00.000000Z\",  \n\"deleted_at\": null  \n}  \n\\],  \n\"meta\": {  \n\"current_page\": 1,  \n\"per_page\": 10,  \n\"total\": 25,  \n\"last_page\": 3  \n}  \n}  \n  \nExemplos de uso:  \n\\- Listar todos: GET /api/devices  \n\\- Filtrar por local: GET /api/devices?location=Escritório  \n\\- Filtrar em uso: GET /api/devices?in_use=true  \n\\- Filtrar por data: GET /api/devices?purchase_date_start=2023-01-01&purchase_date_end=2023-12-31  \n\\- Ordenar por nome: GET /api/devices?sort_by=name&sort_order=asc  \n\\- Página 2: GET /api/devices?page=2  \n\\- Combinado: GET /api/devices?location=Casa&in_use=false&sort_by=purchase_date&sort_order=descEndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "List + Filter",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}devices?in_use=true",
+							"host": [
+								"{{base_url}}devices"
+							],
+							"query": [
+								{
+									"key": "in_use",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.environment.set(\"device_id\", responseData.data.id);\r",
+									"    console.log(`ID do dispositivo salvo: ${responseData.data.id}`);\r",
+									"    \r",
+									"    pm.environment.set(\"device_name\", responseData.data.name);\r",
+									"    pm.environment.set(\"device_location\", responseData.data.location);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Teste phone 1\",\r\n    \"location\": \"Teste local\",\r\n    \"purchase_date\": \"2000-01-01\",\r\n    \"in_use\": true\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}devices",
+							"host": [
+								"{{base_url}}devices"
+							]
+						},
+						"description": "StartFragmentCria um novo dispositivo celular no sistema.\n\nPermite que o usuário autenticado cadastre um novo dispositivo informando nome, localização, data de compra e status de uso.\n\nO dispositivo criado ficará automaticamente associado ao usuário autenticado e só será visível/editável por ele.\n\nValidações:  \n\\- Nome: obrigatório, máximo 255 caracteres  \n\\- Localização: obrigatória, máximo 255 caracteres  \n\\- Data de compra: obrigatória, formato YYYY-MM-DD, não pode ser futura  \n\\- Em uso (in_use): opcional, boolean (padrão: false)\n\nAutenticação: Requer token Bearer no header Authorization\n\nResponse de Sucesso (201):  \n{  \n\"message\": \"Dispositivo criado com sucesso\",  \n\"data\": {  \n\"id\": 1,  \n\"name\": \"iPhone\",  \n\"location\": \"Casa\",  \n\"purchase_date\": \"2023-05-15\",  \n\"in_use\": true,  \n\"user_id\": 1,  \n\"created_at\": \"2025-01-06T10:30:00.000000Z\",  \n\"updated_at\": \"2025-01-06T10:30:00.000000Z\",  \n\"deleted_at\": null  \n}  \n}\n\nResponse de Erro (422):  \n{  \n\"message\": \"A data de compra não pode ser futura\",  \n\"errors\": {  \n\"purchase_date\": \\[\"A data de compra não pode ser futura\"\\]  \n}  \n}EndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Teste phone\",\r\n    \"location\": \"Teste de update realizado\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}devices/{{device_id}}",
+							"host": [
+								"{{base_url}}devices"
+							],
+							"path": [
+								"{{device_id}}"
+							]
+						},
+						"description": "StartFragmentAtualiza as informações de um dispositivo existente.  \n  \nPermite que o usuário autenticado atualize os dados de um dispositivo que lhe pertence. É possível atualizar um ou mais campos simultaneamente.  \n  \nValidações:  \n\\- Nome: opcional, máximo 255 caracteres  \n\\- Localização: opcional, máximo 255 caracteres  \n\\- Data de compra: opcional, formato YYYY-MM-DD, não pode ser futura  \n\\- Em uso (in_use): opcional, boolean  \n  \nAutorização:  \n\\- Usuário só pode atualizar seus próprios dispositivos  \n\\- Se tentar atualizar dispositivo de outro usuário: retorna 404  \n  \nAutenticação: Requer token Bearer no header Authorization  \n  \nPath Parameters:  \n\\- id: ID do dispositivo a ser atualizado  \n  \nResponse de Sucesso (200):  \n{  \n\"message\": \"Dispositivo atualizado com sucesso\",  \n\"data\": {  \n\"id\": 1,  \n\"name\": \"iPhone 14 Pro Max\",  \n\"location\": \"Casa\",  \n\"purchase_date\": \"2023-05-15\",  \n\"in_use\": false,  \n\"user_id\": 1,  \n\"created_at\": \"2025-01-06T10:30:00.000000Z\",  \n\"updated_at\": \"2025-01-06T11:45:00.000000Z\",  \n\"deleted_at\": null  \n}  \n}  \n  \nResponse de Erro (404):  \n{  \n\"message\": \"Dispositivo não encontrado\"  \n}  \n  \nResponse de Erro (422):  \n{  \n\"message\": \"A data de compra não pode ser futura\",  \n\"errors\": {  \n\"purchase_date\": \\[\"A data de compra não pode ser futura\"\\]  \n}  \n}EndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}devices/{{device_id}}",
+							"host": [
+								"{{base_url}}devices"
+							],
+							"path": [
+								"{{device_id}}"
+							]
+						},
+						"description": "StartFragmentExclui um dispositivo do sistema.  \n\nRealiza uma exclusão lógica (soft delete) do dispositivo, marcando como deletado sem removê-lo fisicamente do banco de dados. Dispositivos excluídos não aparecem nas listagens, mas podem ser recuperados se necessário.  \n  \nSoft Delete:  \n\\- O dispositivo não é removido do banco de dados  \n\\- É marcado com data/hora de exclusão (deleted_at)  \n\\- Não aparece mais em listagens ou buscas  \n\\- Mantém histórico para auditoria  \n  \nAutorização:  \n\\- Usuário só pode excluir seus próprios dispositivos  \n\\- Se tentar excluir dispositivo de outro usuário: retorna 404EndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Toggle Use",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}devices/{{device_id}}/use",
+							"host": [
+								"{{base_url}}devices"
+							],
+							"path": [
+								"{{device_id}}",
+								"use"
+							]
+						},
+						"description": "StartFragmentAlterna o status de uso de um dispositivo entre \"em uso\" e \"disponível\".  \n  \nAção específica para mudar o status in_use de um dispositivo sem precisar enviar todos os outros campos.  \n  \nFuncionamento:  \n\\- Se o dispositivo está \"em uso\" (in_use: true) → muda para \"disponível\" (in_use: false)  \n\\- Se o dispositivo está \"disponível\" (in_use: false) → muda para \"em uso\" (in_use: true)  \n\\- É uma operação de toggle (alternar)  \n  \nAutorização:  \n\\- Usuário só pode alternar status de seus próprios dispositivos  \n\\- Se tentar alterar dispositivo de outro usuário: retorna 404EndFragment"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
