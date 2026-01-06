@@ -1,0 +1,70 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: device-manager-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: device_manager
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: device_user
+      MYSQL_PASSWORD: device_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - device-manager-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  laravel-app:
+    build:
+      context: ./device-manager-api
+      dockerfile: Dockerfile
+    container_name: device-manager-laravel
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./device-manager-api:/var/www
+    networks:
+      - device-manager-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    container_name: device-manager-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./device-manager-api:/var/www
+      - ./device-manager-api/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - device-manager-network
+    depends_on:
+      - laravel-app
+
+  angular-app:
+    build:
+      context: ./device-manager-frontend
+      dockerfile: Dockerfile
+    container_name: device-manager-angular
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    networks:
+      - device-manager-network
+    depends_on:
+      - nginx
+
+networks:
+  device-manager-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
