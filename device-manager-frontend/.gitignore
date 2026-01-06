@@ -1,0 +1,42 @@
+# Angular
+/node_modules
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Compilação
+*.js.map
+*.metadata.json
+*.ngfactory.ts
+*.ngsummary.json
+*.shim.ts
+
+# Dependências
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Angular Cache
+.angular/

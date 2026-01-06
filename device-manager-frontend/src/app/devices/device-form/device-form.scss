@@ -1,0 +1,95 @@
+.device-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+
+  .header {
+    margin-bottom: 24px;
+
+    h1 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      font-size: 28px;
+      font-weight: 500;
+    }
+  }
+
+  .form-card {
+    margin-bottom: 24px;
+
+    .form-grid {
+      display: grid;
+      gap: 16px;
+      padding: 16px 0;
+
+      .full-width {
+        width: 100%;
+      }
+
+      .checkbox-field {
+        padding: 16px 0;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+
+      button[type="submit"] {
+        position: relative;
+        min-width: 120px;
+
+        .spinner {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        mat-icon {
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+
+  .help-card {
+    mat-card-header {
+      margin-bottom: 16px;
+
+      mat-icon {
+        color: #2196F3;
+      }
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 8px;
+        color: rgba(0, 0, 0, 0.7);
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .device-form-container {
+    .form-actions {
+      flex-direction: column;
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

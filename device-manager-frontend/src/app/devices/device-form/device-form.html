@@ -1,0 +1,117 @@
+<app-layout>
+  <div class="device-form-container">
+    <!-- Header -->
+    <div class="header">
+      <h1>
+        <button mat-icon-button (click)="cancel()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        {{ isEditMode ? 'Editar' : 'Novo' }} Dispositivo
+      </h1>
+    </div>
+
+    <!-- Loading -->
+    <app-loading *ngIf="loading && isEditMode"></app-loading>
+
+    <!-- Formulário -->
+    <mat-card *ngIf="!loading || !isEditMode" class="form-card">
+      <mat-card-content>
+        <form [formGroup]="deviceForm" (ngSubmit)="onSubmit()">
+          <div class="form-grid">
+            <!-- Nome -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nome do Dispositivo</mat-label>
+              <input 
+                matInput 
+                formControlName="name"
+                placeholder="Digite o nome do seu aparelho"
+                [disabled]="loading">
+              <mat-icon matPrefix>smartphone</mat-icon>
+              <mat-error *ngIf="deviceForm.get('name')?.invalid">
+                {{ getErrorMessage('name') }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Localização -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Localização</mat-label>
+              <input 
+                matInput 
+                formControlName="location"
+                placeholder="Digite a localização do aparelho"
+                [disabled]="loading">
+              <mat-icon matPrefix>location_on</mat-icon>
+              <mat-error *ngIf="deviceForm.get('location')?.invalid">
+                {{ getErrorMessage('location') }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Data de Compra -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Data de Compra</mat-label>
+              <input 
+                matInput 
+                [matDatepicker]="picker"
+                formControlName="purchase_date"
+                [max]="maxDate"
+                [disabled]="loading">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-icon matPrefix>calendar_today</mat-icon>
+              <mat-error *ngIf="deviceForm.get('purchase_date')?.invalid">
+                {{ getErrorMessage('purchase_date') }}
+              </mat-error>
+              <mat-hint>A data não pode ser futura</mat-hint>
+            </mat-form-field>
+
+            <!-- Status -->
+            <div class="checkbox-field full-width">
+              <mat-checkbox 
+                formControlName="in_use"
+                color="primary"
+                [disabled]="loading">
+                Dispositivo está em uso
+              </mat-checkbox>
+            </div>
+          </div>
+
+          <!-- Ações -->
+          <div class="form-actions">
+            <button 
+              mat-button 
+              type="button" 
+              (click)="cancel()"
+              [disabled]="loading">
+              Cancelar
+            </button>
+            <button 
+              mat-raised-button 
+              color="primary" 
+              type="submit"
+              [disabled]="loading || deviceForm.invalid">
+              <mat-spinner *ngIf="loading" diameter="20" class="spinner"></mat-spinner>
+              <mat-icon *ngIf="!loading">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+              <span *ngIf="!loading">{{ isEditMode ? 'Salvar' : 'Criar' }}</span>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Card de Ajuda -->
+    <mat-card class="help-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>info</mat-icon>
+        <mat-card-title>Informações</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul>
+          <li>Todos os campos são obrigatórios</li>
+          <li>O nome e localização podem ter até 255 caracteres</li>
+          <li>A data de compra não pode ser futura</li>
+          <li>Marque "em uso" se o dispositivo estiver sendo utilizado</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</app-layout>

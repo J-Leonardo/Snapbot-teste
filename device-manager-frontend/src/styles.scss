@@ -1,0 +1,31 @@
+@use '@angular/material' as mat;
+
+html, body { 
+  height: 100%; 
+}
+
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+.error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.mat-datepicker-popup {
+  z-index: 9999 !important;
+}
+
+.cdk-overlay-container {
+  z-index: 9999 !important;
+}
+
+.cdk-overlay-backdrop {
+  z-index: 9998 !important;
+}
+
+.cdk-overlay-pane {
+  z-index: 9999 !important;
+}

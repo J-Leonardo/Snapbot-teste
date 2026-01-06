@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+  <span class="toolbar-title">
+    <mat-icon>devices</mat-icon>
+    Gerenciador de Dispositivos
+  </span>
+  
+  <span class="spacer"></span>
+  
+  <button mat-button routerLink="/devices">
+    <mat-icon>list</mat-icon>
+    Dispositivos
+  </button>
+  
+  <button mat-button [matMenuTriggerFor]="menu">
+    <mat-icon>account_circle</mat-icon>
+    {{ currentUser?.name }}
+    <mat-icon>arrow_drop_down</mat-icon>
+  </button>
+  
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item disabled>
+      <mat-icon>email</mat-icon>
+      <span>{{ currentUser?.email }}</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Sair</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>
+
+<div class="content">
+  <ng-content></ng-content>
+</div>
