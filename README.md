@@ -2,20 +2,20 @@
 
 Aplicação CRUD para teste da empresa Snapbot com backend Laravel, frontend Angular e banco MySQL.
 
-## 🚀 Tecnologias
+## Tecnologias
 
 - **Backend:** Laravel 11 + PHP 8.2
 - **Frontend:** Angular 21
 - **Banco de Dados:** MySQL 8.0
 - **Containerização:** Docker + Docker Compose
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 - Docker Desktop instalado
 - Docker Compose instalado
 - Portas disponíveis: 3306 (MySQL), 8000 (Backend), 4200 (Frontend)
 
-## 🔧 Instalação e Execução
+## Instalação e Execução
 
 ### 1. Clonar o repositório
 ```bash
